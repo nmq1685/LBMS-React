@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Form, Alert, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -46,110 +46,142 @@ const Register = () => {
     };
 
     return (
-        <div className="auth-page d-flex align-items-center py-5">
-            <Container>
-                <Row className="justify-content-center">
-                    <Col xs={12} sm={10} md={8} lg={6}>
-                        <div className="text-center mb-4">
-                            <h2 className="fw-bold">📚 LibraryMS</h2>
-                            <p className="text-muted">Create your account</p>
+        <div className="auth-split-page">
+            {/* Left form panel */}
+            <div className="auth-split-right">
+                <div className="auth-form-wrapper auth-form-wrapper--wide">
+                    <div className="auth-form-header">
+                        <h3 className="auth-form-title">Create Account</h3>
+                        <p className="auth-form-sub">Fill in your details to get started</p>
+                    </div>
+
+                    {error && (
+                        <Alert variant="danger" onClose={() => setError('')} dismissible className="auth-alert">
+                            {error}
+                        </Alert>
+                    )}
+
+                    <Form onSubmit={handleSubmit}>
+                        <div className="auth-field-row">
+                            <Form.Group className="auth-field">
+                                <label className="auth-label">Full Name <span className="auth-required">*</span></label>
+                                <div className="auth-input-wrap">
+                                    <span className="auth-input-icon">👤</span>
+                                    <Form.Control
+                                        name="fullName" value={formData.fullName} onChange={handleChange}
+                                        placeholder="Your full name" className="auth-input"
+                                    />
+                                </div>
+                            </Form.Group>
+                            <Form.Group className="auth-field">
+                                <label className="auth-label">Username <span className="auth-required">*</span></label>
+                                <div className="auth-input-wrap">
+                                    <span className="auth-input-icon">🏷️</span>
+                                    <Form.Control
+                                        name="username" value={formData.username} onChange={handleChange}
+                                        placeholder="Choose a username" className="auth-input"
+                                    />
+                                </div>
+                            </Form.Group>
                         </div>
-                        <Card className="shadow-sm border-0">
-                            <Card.Body className="p-4">
-                                {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
 
-                                <Form onSubmit={handleSubmit}>
-                                    <Row>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label>Full Name <span className="text-danger">*</span></Form.Label>
-                                                <Form.Control
-                                                    name="fullName" value={formData.fullName} onChange={handleChange}
-                                                    placeholder="Your full name"
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label>Username <span className="text-danger">*</span></Form.Label>
-                                                <Form.Control
-                                                    name="username" value={formData.username} onChange={handleChange}
-                                                    placeholder="Choose a username"
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
+                        <Form.Group className="auth-field">
+                            <label className="auth-label">Email Address <span className="auth-required">*</span></label>
+                            <div className="auth-input-wrap">
+                                <span className="auth-input-icon">✉️</span>
+                                <Form.Control
+                                    type="email" name="email" value={formData.email} onChange={handleChange}
+                                    placeholder="you@example.com" className="auth-input"
+                                    autoComplete="email"
+                                />
+                            </div>
+                        </Form.Group>
 
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Email address <span className="text-danger">*</span></Form.Label>
-                                        <Form.Control
-                                            type="email" name="email" value={formData.email} onChange={handleChange}
-                                            placeholder="your@email.com"
-                                        />
-                                    </Form.Group>
+                        <div className="auth-field-row">
+                            <Form.Group className="auth-field">
+                                <label className="auth-label">Password <span className="auth-required">*</span></label>
+                                <div className="auth-input-wrap">
+                                    <span className="auth-input-icon">🔒</span>
+                                    <Form.Control
+                                        type={showPw ? 'text' : 'password'}
+                                        name="password" value={formData.password} onChange={handleChange}
+                                        placeholder="Min. 6 characters" className="auth-input auth-input-pw"
+                                    />
+                                    <button type="button" className="auth-pw-toggle" onClick={() => setShowPw(s => !s)}>
+                                        {showPw ? '🙈' : '👁️'}
+                                    </button>
+                                </div>
+                            </Form.Group>
+                            <Form.Group className="auth-field">
+                                <label className="auth-label">Confirm Password <span className="auth-required">*</span></label>
+                                <div className="auth-input-wrap">
+                                    <span className="auth-input-icon">🔒</span>
+                                    <Form.Control
+                                        type="password" name="confirmPassword" value={formData.confirmPassword}
+                                        onChange={handleChange} placeholder="Repeat password" className="auth-input"
+                                    />
+                                </div>
+                            </Form.Group>
+                        </div>
 
-                                    <Row>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label>Password <span className="text-danger">*</span></Form.Label>
-                                                <div className="input-group">
-                                                    <Form.Control
-                                                        type={showPw ? 'text' : 'password'}
-                                                        name="password" value={formData.password} onChange={handleChange}
-                                                        placeholder="Min. 6 characters"
-                                                    />
-                                                    <Button variant="outline-secondary" onClick={() => setShowPw(s => !s)}>
-                                                        {showPw ? '🙈' : '👁️'}
-                                                    </Button>
-                                                </div>
-                                            </Form.Group>
-                                        </Col>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label>Confirm Password <span className="text-danger">*</span></Form.Label>
-                                                <Form.Control
-                                                    type="password" name="confirmPassword" value={formData.confirmPassword}
-                                                    onChange={handleChange} placeholder="Repeat password"
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
+                        <div className="auth-field-row">
+                            <Form.Group className="auth-field">
+                                <label className="auth-label">Phone Number</label>
+                                <div className="auth-input-wrap">
+                                    <span className="auth-input-icon">📱</span>
+                                    <Form.Control
+                                        name="phone" value={formData.phone} onChange={handleChange}
+                                        placeholder="e.g. 0912345678" className="auth-input"
+                                    />
+                                </div>
+                            </Form.Group>
+                            <Form.Group className="auth-field">
+                                <label className="auth-label">Address</label>
+                                <div className="auth-input-wrap">
+                                    <span className="auth-input-icon">📍</span>
+                                    <Form.Control
+                                        name="address" value={formData.address} onChange={handleChange}
+                                        placeholder="Your address" className="auth-input"
+                                    />
+                                </div>
+                            </Form.Group>
+                        </div>
 
-                                    <Row>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label>Phone Number</Form.Label>
-                                                <Form.Control
-                                                    name="phone" value={formData.phone} onChange={handleChange}
-                                                    placeholder="e.g. 0912345678"
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col md={6}>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label>Address</Form.Label>
-                                                <Form.Control
-                                                    name="address" value={formData.address} onChange={handleChange}
-                                                    placeholder="Your address"
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
+                        <button type="submit" className="auth-submit-btn mt-1" disabled={loading}>
+                            {loading ? <><Spinner size="sm" className="me-2" />Creating account...</> : 'Create Account →'}
+                        </button>
+                    </Form>
 
-                                    <Button type="submit" variant="warning" className="w-100 fw-semibold mt-2" disabled={loading}>
-                                        {loading ? <Spinner size="sm" /> : 'Create Account'}
-                                    </Button>
-                                </Form>
-                            </Card.Body>
-                        </Card>
+                    <p className="auth-switch-link mt-4">
+                        Already have an account? <Link to="/login">Sign in here</Link>
+                    </p>
+                </div>
+            </div>
 
-                        <p className="text-center mt-3 text-muted">
-                            Already have an account?{' '}
-                            <Link to="/login" className="text-warning fw-semibold">Sign in here</Link>
-                        </p>
-                    </Col>
-                </Row>
-            </Container>
+            {/* Right decorative panel */}
+            <div className="auth-split-left">
+                <div className="auth-left-content">
+                    <h2 className="auth-left-title">Join our community!</h2>
+                    <p className="auth-left-sub">
+                        Create a free account and get instant access to thousands of books, manage your reading, and connect with a world of knowledge.
+                    </p>
+                    <div className="auth-features">
+                        <div className="auth-feature-item">
+                            <span className="auth-feature-icon">🏛️</span>
+                            <span>Access the full library</span>
+                        </div>
+                        <div className="auth-feature-item">
+                            <span className="auth-feature-icon">🔖</span>
+                            <span>Manage your reading list</span>
+                        </div>
+                        <div className="auth-feature-item">
+                            <span className="auth-feature-icon">🚀</span>
+                            <span>Get started in seconds</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="auth-left-deco">❝</div>
+            </div>
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Form, Alert, Spinner } from 'react-bootstrap';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -37,73 +37,103 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-page d-flex align-items-center min-vh-100">
-            <Container>
-                <Row className="justify-content-center">
-                    <Col xs={12} sm={10} md={7} lg={5}>
-                        <div className="text-center mb-4">
-                            <h2 className="fw-bold">📚 LibraryMS</h2>
-                            <p className="text-muted">Sign in to your account</p>
+        <div className="auth-split-page">
+            {/* Left decorative panel */}
+            <div className="auth-split-left">
+                <div className="auth-left-content">
+                    <h2 className="auth-left-title">Welcome back!</h2>
+                    <p className="auth-left-sub">
+                        Sign in to access your personal library, manage your borrows, and discover thousands of new books.
+                    </p>
+                    <div className="auth-features">
+                        <div className="auth-feature-item">
+                            <span className="auth-feature-icon">📖</span>
+                            <span>Borrow books anytime</span>
                         </div>
-                        <Card className="shadow-sm border-0">
-                            <Card.Body className="p-4">
-                                {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
+                        <div className="auth-feature-item">
+                            <span className="auth-feature-icon">❤️</span>
+                            <span>Save to your wishlist</span>
+                        </div>
+                        <div className="auth-feature-item">
+                            <span className="auth-feature-icon">📊</span>
+                            <span>Track borrow history</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="auth-left-deco">❝</div>
+            </div>
 
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Email address</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            placeholder="Enter your email"
-                                            autoComplete="email"
-                                        />
-                                    </Form.Group>
+            {/* Right form panel */}
+            <div className="auth-split-right">
+                <div className="auth-form-wrapper">
+                    <div className="auth-form-header">
+                        <h3 className="auth-form-title">Sign In</h3>
+                        <p className="auth-form-sub">Enter your credentials to continue</p>
+                    </div>
 
-                                    <Form.Group className="mb-4">
-                                        <Form.Label>Password</Form.Label>
-                                        <div className="input-group">
-                                            <Form.Control
-                                                type={showPw ? 'text' : 'password'}
-                                                name="password"
-                                                value={formData.password}
-                                                onChange={handleChange}
-                                                placeholder="Enter your password"
-                                                autoComplete="current-password"
-                                            />
-                                            <Button variant="outline-secondary" onClick={() => setShowPw(s => !s)}>
-                                                {showPw ? '🙈' : '👁️'}
-                                            </Button>
-                                        </div>
-                                    </Form.Group>
+                    {error && (
+                        <Alert variant="danger" onClose={() => setError('')} dismissible className="auth-alert">
+                            {error}
+                        </Alert>
+                    )}
 
-                                    <Button type="submit" variant="warning" className="w-100 fw-semibold" disabled={loading}>
-                                        {loading ? <Spinner size="sm" /> : 'Sign In'}
-                                    </Button>
-                                </Form>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group className="auth-field">
+                            <label className="auth-label">Email Address</label>
+                            <div className="auth-input-wrap">
+                                <span className="auth-input-icon">✉️</span>
+                                <Form.Control
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="you@example.com"
+                                    autoComplete="email"
+                                    className="auth-input"
+                                />
+                            </div>
+                        </Form.Group>
 
-                                <hr className="my-3" />
-                                <p className="text-center text-muted small mb-2">Demo accounts:</p>
-                                <div className="d-flex gap-2">
-                                    <Button variant="outline-secondary" size="sm" className="flex-grow-1" onClick={() => fillDemo('admin')}>
-                                        Admin Demo
-                                    </Button>
-                                    <Button variant="outline-secondary" size="sm" className="flex-grow-1" onClick={() => fillDemo('user')}>
-                                        User Demo
-                                    </Button>
-                                </div>
-                            </Card.Body>
-                        </Card>
+                        <Form.Group className="auth-field">
+                            <label className="auth-label">Password</label>
+                            <div className="auth-input-wrap">
+                                <span className="auth-input-icon">🔒</span>
+                                <Form.Control
+                                    type={showPw ? 'text' : 'password'}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    placeholder="Your password"
+                                    autoComplete="current-password"
+                                    className="auth-input auth-input-pw"
+                                />
+                                <button type="button" className="auth-pw-toggle" onClick={() => setShowPw(s => !s)}>
+                                    {showPw ? '🙈' : '👁️'}
+                                </button>
+                            </div>
+                        </Form.Group>
 
-                        <p className="text-center mt-3 text-muted">
-                            Don't have an account?{' '}
-                            <Link to="/register" className="text-warning fw-semibold">Register here</Link>
-                        </p>
-                    </Col>
-                </Row>
-            </Container>
+                        <button type="submit" className="auth-submit-btn" disabled={loading}>
+                            {loading ? <><Spinner size="sm" className="me-2" />Signing in...</> : 'Sign In →'}
+                        </button>
+                    </Form>
+
+                    <div className="auth-divider"><span>or try a demo account</span></div>
+
+                    <div className="auth-demo-btns">
+                        <button className="auth-demo-btn" onClick={() => fillDemo('admin')}>
+                            <span>⚙️</span> Admin Demo
+                        </button>
+                        <button className="auth-demo-btn" onClick={() => fillDemo('user')}>
+                            <span>👤</span> User Demo
+                        </button>
+                    </div>
+
+                    <p className="auth-switch-link">
+                        Don't have an account? <Link to="/register">Create one free</Link>
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };

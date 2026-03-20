@@ -29,8 +29,8 @@ const Header = () => {
         <Navbar bg="dark" variant="dark" expand="lg" className="lbms-header" sticky="top">
             <Container>
                 <Navbar.Brand as={Link} to="/" className="brand-logo">
-                    <span className="brand-icon">📚</span>
-                    <span className="brand-name ms-2">LibraryMS</span>
+                    <img src="/images/logo.png" alt="LibraryMS" height="36" className="d-inline-block align-middle me-2" />
+                    <span className="brand-name">LibraryMS</span>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="main-navbar" />
                 <Navbar.Collapse id="main-navbar">
