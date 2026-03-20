@@ -92,7 +92,7 @@ const Home = () => {
             <div className="hero-section">
                 <Container>
                     <Row className="py-5 align-items-center">
-                        <Col lg={7} className="text-center text-lg-start">
+                        <Col lg={6} className="text-center text-lg-start">
                             <h1 className="hero-title">Discover Your Next<br /><span className="text-warning">Great Read</span></h1>
                             <p className="hero-subtitle">Rent from thousands of books. Read today, return tomorrow.</p>
                             <Form className="hero-search d-flex gap-2 mt-4" onSubmit={handleSearch}>
@@ -105,6 +105,31 @@ const Home = () => {
                                 />
                                 <Button type="submit" variant="warning" className="px-3">🔍 Search</Button>
                             </Form>
+                        </Col>
+                        <Col lg={6} className="d-none d-lg-flex justify-content-center align-items-center">
+                            <div className="hero-book-scene">
+                                <div className="hero-book">
+                                    <div className="hero-book-front">
+                                        <div className="hb-top-stripe"></div>
+                                        <div className="hb-icon">📚</div>
+                                        <div className="hb-title">Library<br />Book<br />Management</div>
+                                        <div className="hb-divider"></div>
+                                        <div className="hb-subtitle">Digital Library System</div>
+                                        <div className="hb-bottom-stripe"></div>
+                                    </div>
+                                    <div className="hero-book-back">
+                                        <div className="hb-back-header">✨ Why Choose Us?</div>
+                                        <ul className="hb-back-list">
+                                            <li>📚 {books.length}+ Books</li>
+                                            <li>🏷️ {categories.length} Categories</li>
+                                            <li>💰 From $1.75/day</li>
+                                            <li>⚡ 24/7 Online Access</li>
+                                            <li>🔄 Easy Returns</li>
+                                        </ul>
+                                        <div className="hb-back-footer">LBMS • 2026</div>
+                                    </div>
+                                </div>
+                            </div>
                         </Col>
                     </Row>
                 </Container>
