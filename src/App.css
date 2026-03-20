@@ -1,38 +1,334 @@
-.App {
-  text-align: center;
+/* ============================================================
+   LibraryMS – Global Styles
+   ============================================================ */
+
+/* ---- Variables ---- */
+:root {
+  --primary: #f6c90e;
+  --primary-dark: #e0b800;
+  --dark: #1a1d27;
+  --darker: #13151f;
+  --text-muted: #6c757d;
+  --card-radius: 12px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.App-logo {
-  height: 40vmin;
+body {
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---- Header ---- */
+.lbms-header {
+  background-color: var(--darker) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1030;
+}
+
+.brand-logo {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--primary) !important;
+  text-decoration: none;
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+}
+
+.nav-icon-link {
+  position: relative;
+  font-size: 1.2rem;
+  padding: 0.4rem 0.6rem !important;
+}
+
+/* ---- Hero Section ---- */
+.hero-section {
+  background: linear-gradient(135deg, var(--darker) 0%, #2c3e50 50%, #1a1d27 100%);
+  color: white;
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(246, 201, 14, 0.1) 0%, transparent 70%);
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.hero-subtitle {
+  font-size: 1.15rem;
+  opacity: 0.8;
+  margin-bottom: 0;
+}
+
+.hero-search .form-control {
+  border-radius: 8px 0 0 8px;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
+.hero-search .btn {
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1.5rem;
+}
+
+/* ---- Stats ---- */
+.stat-card {
+  background: white;
+  border-radius: var(--card-radius);
+  padding: 1.5rem 1rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.stat-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ---- Section Titles ---- */
+.section-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* ---- Book Cards ---- */
+.book-card {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border: none !important;
+}
+
+.book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+.book-cover-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: #eee;
+  aspect-ratio: 2/3;
+}
+
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.book-card:hover .book-cover {
+  transform: scale(1.05);
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s, background 0.2s;
+  z-index: 2;
+}
+
+.wishlist-btn:hover {
+  transform: scale(1.2);
+  background: white;
+}
+
+.wishlist-btn.active {
+  background: white;
+}
+
+.out-of-stock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
 }
 
-.App-link {
-  color: #61dafb;
+.book-title-link {
+  color: inherit;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.book-title-link:hover {
+  color: var(--primary-dark);
+}
+
+/* ---- Book Detail ---- */
+.book-detail-cover-wrapper {
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.book-detail-cover {
+  width: 100%;
+  display: block;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+
+.meta-box {
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.rental-box {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+  border: 2px solid #ffd60a !important;
+  border-radius: var(--card-radius);
+}
+
+/* ---- Auth Pages ---- */
+.auth-page {
+  background: linear-gradient(135deg, var(--darker) 0%, #2c3e50 100%);
+  min-height: 100vh;
+}
+
+.auth-page .card {
+  border-radius: var(--card-radius);
+}
+
+/* ---- Stat Link Cards ---- */
+.stat-link-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: var(--card-radius) !important;
+  color: inherit !important;
+}
+
+.stat-link-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ---- Admin Quick Cards ---- */
+.admin-quick-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: var(--card-radius) !important;
+  color: inherit !important;
+  cursor: pointer;
+}
+
+.admin-quick-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+  background: #fff9e6 !important;
+}
+
+/* ---- Footer ---- */
+.footer-link {
+  color: #adb5bd;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 0.9rem;
+}
+
+.footer-link:hover {
+  color: var(--primary);
+}
+
+/* ---- Tables ---- */
+.table th {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 1.7rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .hero-section {
+    padding: 3rem 0 2.5rem;
   }
+
+  .stat-number {
+    font-size: 1.4rem;
+  }
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
