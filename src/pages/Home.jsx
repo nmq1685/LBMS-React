@@ -101,10 +101,9 @@ const Home = () => {
                                     placeholder="Search by title, author..."
                                     value={searchTerm}
                                     onChange={e => setSearchTerm(e.target.value)}
-                                    size="lg"
                                     className="flex-grow-1"
                                 />
-                                <Button type="submit" variant="warning" size="lg" className="px-4">🔍 Search</Button>
+                                <Button type="submit" variant="warning" className="px-3">🔍 Search</Button>
                             </Form>
                         </Col>
                     </Row>
@@ -136,7 +135,7 @@ const Home = () => {
                         <h2 className="section-title">⭐ Featured Books</h2>
                         <Row className="g-3">
                             {featuredBooks.slice(0, 4).map(book => (
-                                <Col key={book.id} xs={6} md={3}>
+                                <Col key={book.id} xs={6} md={4} lg={2}>
                                     <BookCard book={book} categories={categories} />
                                 </Col>
                             ))}
@@ -203,7 +202,7 @@ const Home = () => {
                             <p className="text-muted small mb-3">{filtered.length} books found</p>
                             <Row className="g-3">
                                 {paginated.map(book => (
-                                    <Col key={book.id} xs={6} md={4} lg={3}>
+                                    <Col key={book.id} xs={6} md={4} lg={2}>
                                         <BookCard book={book} categories={categories} />
                                     </Col>
                                 ))}
