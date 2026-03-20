@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Spinner, Form } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { booksAPI, borrowsAPI } from '../services/api';
@@ -87,111 +87,147 @@ const Cart = () => {
     );
 
     return (
-        <Container className="py-5">
-            <h2 className="fw-bold mb-4">🛒 My Cart</h2>
+        <div className="cart-page">
+            {/* ── Page Banner ── */}
+            <div className="page-banner">
+                <Container>
+                    <span className="page-banner-icon">🛒</span>
+                    <h1 className="page-banner-title">My Cart</h1>
+                    <p className="page-banner-sub">
+                        {cartItems.length === 0 ? 'Your cart is empty' : `${cartItems.length} item${cartItems.length > 1 ? 's' : ''} ready to borrow`}
+                    </p>
+                </Container>
+            </div>
 
-            {cartItems.length === 0 ? (
-                <div className="text-center py-5">
-                    <p className="fs-1 mb-3">🛒</p>
-                    <h4 className="text-muted">Your cart is empty</h4>
-                    <p className="text-muted">Browse books and add them to your cart</p>
-                    <Button as={Link} to="/" variant="warning" className="mt-2">Browse Books</Button>
-                </div>
-            ) : (
-                <Row className="g-4">
-                    <Col lg={8}>
-                        {cartItems.map(item => {
-                            const book = getBook(item.bookId);
-                            if (!book) return null;
-                            return (
-                                <Card key={item.id} className="mb-3 shadow-sm border-0">
-                                    <Card.Body>
-                                        <Row className="align-items-center g-3">
-                                            <Col xs={3} md={2}>
+            <Container className="py-4">
+                {cartItems.length === 0 ? (
+                    <div className="cart-empty-wrap">
+                        <span className="cart-empty-icon">🛒</span>
+                        <h4 className="fw-bold mt-2 mb-2">Your cart is empty</h4>
+                        <p className="text-muted mb-4">Browse books and add them to your cart to get started</p>
+                        <Link to="/" className="btn btn-warning fw-bold px-4 py-2" style={{ borderRadius: 12 }}>
+                            Browse Books
+                        </Link>
+                    </div>
+                ) : (
+                    <Row className="g-4">
+                        {/* ── Items ── */}
+                        <Col lg={8}>
+                            <div className="d-flex flex-column gap-3">
+                                {cartItems.map((item, idx) => {
+                                    const book = getBook(item.bookId);
+                                    if (!book) return null;
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className="cart-item-card p-3"
+                                            style={{ animationDelay: `${idx * 0.07}s` }}
+                                        >
+                                            <div className="d-flex gap-3 align-items-start">
+                                                {/* Cover */}
                                                 <img
-                                                    src={book.cover} alt={book.title}
-                                                    style={{ width: '100%', aspectRatio: '2/3', objectFit: 'cover', borderRadius: 6 }}
+                                                    src={book.cover}
+                                                    alt={book.title}
+                                                    className="cart-item-cover"
                                                     onError={e => { e.target.src = `https://placehold.co/80x120/2c3e50/white?text=Book`; }}
                                                 />
-                                            </Col>
-                                            <Col xs={9} md={5}>
-                                                <h6 className="fw-bold mb-1">
-                                                    <Link to={`/books/${book.id}`} className="text-dark text-decoration-none">{book.title}</Link>
-                                                </h6>
-                                                <p className="text-muted small mb-1">{book.author}</p>
-                                                <p className="text-warning fw-semibold mb-0">${book.rentalPrice}/day</p>
-                                            </Col>
-                                            <Col xs={6} md={3}>
-                                                <Form.Label className="small text-muted">Days to rent</Form.Label>
-                                                <div className="d-flex align-items-center gap-1">
-                                                    <Button size="sm" variant="outline-secondary" onClick={() => updateCartItem(item.id, { days: Math.max(1, item.days - 1) })}>−</Button>
-                                                    <Form.Control
-                                                        type="number" size="sm" min="1" max="60" value={item.days}
-                                                        onChange={e => updateCartItem(item.id, { days: Math.max(1, parseInt(e.target.value) || 1) })}
-                                                        style={{ width: 55, textAlign: 'center' }}
-                                                    />
-                                                    <Button size="sm" variant="outline-secondary" onClick={() => updateCartItem(item.id, { days: item.days + 1 })}>+</Button>
-                                                </div>
-                                                <div className="d-flex align-items-center gap-1 mt-1">
-                                                    <Form.Label className="small text-muted mb-0">Qty:</Form.Label>
-                                                    <Button size="sm" variant="outline-secondary" onClick={() => { if (item.quantity > 1) updateCartItem(item.id, { quantity: item.quantity - 1 }); }}>−</Button>
-                                                    <span className="px-2 small fw-semibold">{item.quantity}</span>
-                                                    <Button size="sm" variant="outline-secondary" onClick={() => updateCartItem(item.id, { quantity: item.quantity + 1 })}>+</Button>
-                                                </div>
-                                            </Col>
-                                            <Col xs={6} md={2} className="text-end">
-                                                <div className="fw-bold text-warning">${getItemTotal(item)}</div>
-                                                <Button
-                                                    variant="link" size="sm" className="text-danger p-0 mt-1"
-                                                    onClick={async () => { await removeFromCart(item.id); toast.info('Removed from cart'); }}
-                                                >
-                                                    🗑️ Remove
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            );
-                        })}
-                    </Col>
 
-                    <Col lg={4}>
-                        <Card className="shadow-sm border-0 sticky-top" style={{ top: 80 }}>
-                            <Card.Body className="p-4">
-                                <h5 className="fw-bold mb-4">Order Summary</h5>
+                                                {/* Details */}
+                                                <div className="flex-grow-1">
+                                                    <div className="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <h6 className="fw-bold mb-0" style={{ fontSize: '0.95rem' }}>
+                                                                <Link to={`/books/${book.id}`} className="text-dark text-decoration-none">
+                                                                    {book.title}
+                                                                </Link>
+                                                            </h6>
+                                                            <p className="text-muted mb-2" style={{ fontSize: '0.82rem' }}>{book.author}</p>
+                                                            <span className="fw-bold text-warning">${book.rentalPrice}<span className="text-muted fw-normal" style={{ fontSize: '0.78rem' }}>/day</span></span>
+                                                        </div>
+                                                        <button
+                                                            className="btn btn-link text-danger p-0"
+                                                            style={{ fontSize: '1.1rem', lineHeight: 1 }}
+                                                            onClick={async () => { await removeFromCart(item.id); toast.info('Removed from cart'); }}
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="d-flex flex-wrap gap-4 mt-2">
+                                                        {/* Days */}
+                                                        <div>
+                                                            <div className="text-muted mb-1" style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Days</div>
+                                                            <div className="d-flex align-items-center gap-1">
+                                                                <button className="qty-btn" onClick={() => updateCartItem(item.id, { days: Math.max(1, item.days - 1) })}>−</button>
+                                                                <div className="qty-display">{item.days}</div>
+                                                                <button className="qty-btn" onClick={() => updateCartItem(item.id, { days: item.days + 1 })}>+</button>
+                                                            </div>
+                                                        </div>
+                                                        {/* Quantity */}
+                                                        <div>
+                                                            <div className="text-muted mb-1" style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Qty</div>
+                                                            <div className="d-flex align-items-center gap-1">
+                                                                <button className="qty-btn" onClick={() => { if (item.quantity > 1) updateCartItem(item.id, { quantity: item.quantity - 1 }); }}>−</button>
+                                                                <div className="qty-display">{item.quantity}</div>
+                                                                <button className="qty-btn" onClick={() => updateCartItem(item.id, { quantity: item.quantity + 1 })}>+</button>
+                                                            </div>
+                                                        </div>
+                                                        {/* Item total */}
+                                                        <div className="ms-auto text-end">
+                                                            <div className="text-muted mb-1" style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Subtotal</div>
+                                                            <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#e0a800' }}>${getItemTotal(item)}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Col>
+
+                        {/* ── Summary ── */}
+                        <Col lg={4}>
+                            <div className="cart-summary-card">
+                                <div className="cart-summary-hdg">📋 Order Summary</div>
+
                                 {cartItems.map(item => {
                                     const book = getBook(item.bookId);
                                     if (!book) return null;
                                     return (
-                                        <div key={item.id} className="d-flex justify-content-between mb-2 small">
-                                            <span className="text-truncate me-2" style={{ maxWidth: 180 }}>{book.title} ({item.days}d × {item.quantity})</span>
-                                            <span className="fw-semibold">${getItemTotal(item)}</span>
+                                        <div key={item.id} className="cart-summary-row">
+                                            <span style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                {book.title} ({item.days}d×{item.quantity})
+                                            </span>
+                                            <span style={{ color: 'white', fontWeight: 600 }}>${getItemTotal(item)}</span>
                                         </div>
                                     );
                                 })}
-                                <hr />
-                                <div className="d-flex justify-content-between fw-bold fs-5 mb-4">
-                                    <span>Total</span>
-                                    <span className="text-warning">${grandTotal.toFixed(2)}</span>
+
+                                <div className="cart-summary-total-row">
+                                    <span className="fw-bold text-white">Grand Total</span>
+                                    <div className="cart-total-price">${grandTotal.toFixed(2)}</div>
                                 </div>
-                                <Button
-                                    variant="warning" className="w-100 fw-semibold"
-                                    onClick={handleCheckout} disabled={checkingOut}
+
+                                <button
+                                    className="cart-checkout-btn"
+                                    onClick={handleCheckout}
+                                    disabled={checkingOut}
                                 >
                                     {checkingOut ? <Spinner size="sm" /> : '✅ Checkout & Borrow'}
-                                </Button>
-                                <Button
-                                    variant="outline-danger" size="sm" className="w-100 mt-2"
+                                </button>
+                                <button
+                                    className="cart-clear-btn"
                                     onClick={async () => { await clearCart(); toast.info('Cart cleared'); }}
                                 >
-                                    Clear Cart
-                                </Button>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            )}
-        </Container>
+                                    🗑️ Clear Cart
+                                </button>
+                            </div>
+                        </Col>
+                    </Row>
+                )}
+            </Container>
+        </div>
     );
 };
 

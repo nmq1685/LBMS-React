@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { booksAPI, categoriesAPI } from '../services/api';
 import BookCard from '../components/BookCard';
@@ -87,24 +87,25 @@ const Home = () => {
     };
 
     return (
-        <div>
-            {/* Hero */}
+        <div className="home-page">
+            {/* ── Hero ── */}
             <div className="hero-section">
                 <Container>
                     <Row className="py-5 align-items-center">
                         <Col lg={6} className="text-center text-lg-start">
+                            <div className="hero-tag">✨ Welcome to LBMS 2026</div>
                             <h1 className="hero-title">Discover Your Next<br /><span className="text-warning">Great Read</span></h1>
                             <p className="hero-subtitle">Rent from thousands of books. Read today, return tomorrow.</p>
-                            <Form className="hero-search d-flex gap-2 mt-4" onSubmit={handleSearch}>
-                                <Form.Control
+                            <form className="d-flex gap-2 mt-4 hero-search" onSubmit={handleSearch}>
+                                <input
                                     type="text"
-                                    placeholder="Search by title, author..."
+                                    className="form-control flex-grow-1"
+                                    placeholder="Search by title, author, ISBN..."
                                     value={searchTerm}
                                     onChange={e => setSearchTerm(e.target.value)}
-                                    className="flex-grow-1"
                                 />
-                                <Button type="submit" variant="warning" className="px-3">🔍 Search</Button>
-                            </Form>
+                                <button type="submit" className="btn btn-warning px-3 fw-bold">🔍 Search</button>
+                            </form>
                         </Col>
                         <Col lg={6} className="d-none d-lg-flex justify-content-center align-items-center">
                             <div className="hero-book-scene">
@@ -136,30 +137,30 @@ const Home = () => {
             </div>
 
             <Container className="py-5">
-                {/* Stats */}
+                {/* ── Stats ── */}
                 <Row className="mb-5 g-3">
                     {[
-                        { icon: '📚', number: `${books.length}+`, label: 'Books Available' },
-                        { icon: '🏷️', number: categories.length, label: 'Categories' },
-                        { icon: '💰', number: '$1.75', label: 'Starting Price/Day' },
-                        { icon: '⚡', number: '24/7', label: 'Online Access' },
+                        { icon: '📚', number: `${books.length}+`, label: 'Books Available', delay: '0s' },
+                        { icon: '🏷️', number: categories.length, label: 'Categories', delay: '0.08s' },
+                        { icon: '💰', number: '$1.75', label: 'Starting Price/Day', delay: '0.16s' },
+                        { icon: '⚡', number: '24/7', label: 'Online Access', delay: '0.24s' },
                     ].map((stat, i) => (
                         <Col xs={6} md={3} key={i}>
-                            <div className="stat-card text-center p-3">
-                                <div className="stat-icon">{stat.icon}</div>
-                                <div className="stat-number">{stat.number}</div>
-                                <div className="stat-label">{stat.label}</div>
+                            <div className="stat-card-v2" style={{ animationDelay: stat.delay }}>
+                                <span className="stat-v2-icon">{stat.icon}</span>
+                                <div className="stat-v2-num">{stat.number}</div>
+                                <div className="stat-v2-label">{stat.label}</div>
                             </div>
                         </Col>
                     ))}
                 </Row>
 
-                {/* Featured Books */}
+                {/* ── Featured Books ── */}
                 {!searchTerm && selectedCategory === 'all' && featuredBooks.length > 0 && (
                     <section className="mb-5">
                         <h2 className="section-title">⭐ Featured Books</h2>
                         <Row className="g-3">
-                            {featuredBooks.slice(0, 4).map(book => (
+                            {featuredBooks.slice(0, 6).map(book => (
                                 <Col key={book.id} xs={6} md={4} lg={2}>
                                     <BookCard book={book} categories={categories} />
                                 </Col>
@@ -168,46 +169,46 @@ const Home = () => {
                     </section>
                 )}
 
-                {/* All Books */}
+                {/* ── All Books ── */}
                 <section>
-                    <Row className="align-items-center mb-3">
-                        <Col>
-                            <h2 className="section-title mb-0">📖 All Books</h2>
-                        </Col>
-                        <Col xs="auto">
-                            <Form.Select value={sortBy} onChange={e => { setSortBy(e.target.value); setPage(1); }} size="sm">
-                                <option value="default">Sort: Default</option>
-                                <option value="price-asc">Price: Low → High</option>
-                                <option value="price-desc">Price: High → Low</option>
-                                <option value="rating">Top Rated</option>
-                                <option value="title">Title A–Z</option>
-                                <option value="newest">Newest First</option>
-                            </Form.Select>
-                        </Col>
-                    </Row>
+                    <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                        <h2 className="section-title mb-0">📖 All Books</h2>
+                        <select
+                            className="sort-select-modern"
+                            value={sortBy}
+                            onChange={e => { setSortBy(e.target.value); setPage(1); }}
+                        >
+                            <option value="default">Sort: Default</option>
+                            <option value="price-asc">Price: Low → High</option>
+                            <option value="price-desc">Price: High → Low</option>
+                            <option value="rating">Top Rated</option>
+                            <option value="title">Title A–Z</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
 
                     {/* Category filters */}
                     <div className="d-flex flex-wrap gap-2 mb-4">
-                        <Button
-                            variant={selectedCategory === 'all' ? 'warning' : 'outline-secondary'}
-                            size="sm"
+                        <button
+                            className="category-chip"
+                            style={selectedCategory === 'all'
+                                ? { background: '#f6c90e', borderColor: '#f6c90e', color: '#13151f' }
+                                : { background: 'white', borderColor: '#e5e7eb', color: '#374151' }}
                             onClick={() => { setSelectedCategory('all'); setPage(1); }}
                         >
-                            All
-                        </Button>
+                            🌐 All
+                        </button>
                         {categories.map(cat => (
-                            <Button
+                            <button
                                 key={cat.id}
-                                size="sm"
+                                className="category-chip"
+                                style={selectedCategory === String(cat.id)
+                                    ? { backgroundColor: cat.color, borderColor: cat.color, color: '#fff' }
+                                    : { backgroundColor: 'white', borderColor: cat.color, color: cat.color }}
                                 onClick={() => { setSelectedCategory(String(cat.id)); setPage(1); }}
-                                style={
-                                    selectedCategory === String(cat.id)
-                                        ? { backgroundColor: cat.color, borderColor: cat.color, color: '#fff' }
-                                        : { borderColor: cat.color, color: cat.color, backgroundColor: 'transparent' }
-                                }
                             >
                                 {cat.icon} {cat.name}
-                            </Button>
+                            </button>
                         ))}
                     </div>
 
@@ -220,14 +221,14 @@ const Home = () => {
                         <div className="text-center py-5">
                             <p className="fs-1">📭</p>
                             <p className="text-muted fs-5">No books found matching your criteria.</p>
-                            <Button variant="outline-warning" onClick={resetFilters}>Clear Filters</Button>
+                            <button className="btn btn-outline-warning" onClick={resetFilters}>Clear Filters</button>
                         </div>
                     ) : (
                         <>
                             <p className="text-muted small mb-3">{filtered.length} books found</p>
                             <Row className="g-3">
-                                {paginated.map(book => (
-                                    <Col key={book.id} xs={6} md={4} lg={2}>
+                                {paginated.map((book, idx) => (
+                                    <Col key={book.id} xs={6} md={4} lg={2} style={{ animationDelay: `${idx * 0.04}s` }}>
                                         <BookCard book={book} categories={categories} />
                                     </Col>
                                 ))}
@@ -235,33 +236,30 @@ const Home = () => {
 
                             {/* Pagination */}
                             {totalPages > 1 && (
-                                <div className="d-flex justify-content-center gap-2 mt-4">
-                                    <Button
-                                        variant="outline-secondary"
-                                        size="sm"
+                                <div className="d-flex justify-content-center gap-2 mt-5">
+                                    <button
+                                        className="pagination-btn"
                                         disabled={page === 1}
                                         onClick={() => setPage(p => p - 1)}
                                     >
-                                        ← Prev
-                                    </Button>
+                                        ←
+                                    </button>
                                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                                        <Button
+                                        <button
                                             key={p}
-                                            size="sm"
-                                            variant={p === page ? 'warning' : 'outline-secondary'}
+                                            className={`pagination-btn${p === page ? ' active' : ''}`}
                                             onClick={() => setPage(p)}
                                         >
                                             {p}
-                                        </Button>
+                                        </button>
                                     ))}
-                                    <Button
-                                        variant="outline-secondary"
-                                        size="sm"
+                                    <button
+                                        className="pagination-btn"
                                         disabled={page === totalPages}
                                         onClick={() => setPage(p => p + 1)}
                                     >
-                                        Next →
-                                    </Button>
+                                        →
+                                    </button>
                                 </div>
                             )}
                         </>

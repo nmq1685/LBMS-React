@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, Spinner, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Spinner, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { usersAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -62,119 +62,140 @@ const Profile = () => {
     };
 
     return (
-        <Container className="py-5" style={{ maxWidth: 800 }}>
-            <h2 className="fw-bold mb-4">👤 My Profile</h2>
+        <div className="profile-page">
+            {/* ── Page Banner ── */}
+            <div className="page-banner">
+                <Container>
+                    <span className="page-banner-icon">👤</span>
+                    <h1 className="page-banner-title">My Profile</h1>
+                    <p className="page-banner-sub">Manage your account settings and information</p>
+                </Container>
+            </div>
 
-            <Row className="g-4">
-                <Col md={4}>
-                    <Card className="text-center border-0 shadow-sm">
-                        <Card.Body className="p-4">
-                            <img
-                                src={user.avatar}
-                                alt={user.fullName}
-                                className="rounded-circle mb-3"
-                                width="100"
-                                height="100"
-                            />
-                            <h5 className="fw-bold">{user.fullName}</h5>
-                            <p className="text-muted small mb-1">{user.email}</p>
-                            <span className={`badge ${user.role === 'admin' ? 'bg-danger' : 'bg-primary'}`}>
-                                {user.role === 'admin' ? '⚙️ Admin' : '👤 Member'}
-                            </span>
-                            <p className="text-muted small mt-2 mb-0">Member since {user.createdAt}</p>
-                        </Card.Body>
-                    </Card>
-                </Col>
-
-                <Col md={8}>
-                    <Card className="border-0 shadow-sm">
-                        <Card.Body className="p-4">
-                            <h5 className="mb-3">Edit Information</h5>
-                            {error && <Alert variant="danger" onClose={() => setError('')} dismissible>{error}</Alert>}
-                            <Form onSubmit={handleSave}>
-                                <Row>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Full Name</Form.Label>
-                                            <Form.Control name="fullName" value={formData.fullName} onChange={handleChange} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control name="username" value={formData.username} onChange={handleChange} />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Email (cannot change)</Form.Label>
-                                    <Form.Control value={user.email} disabled className="bg-light" />
-                                </Form.Group>
-                                <Row>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Phone</Form.Label>
-                                            <Form.Control name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone number" />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Address</Form.Label>
-                                            <Form.Control name="address" value={formData.address} onChange={handleChange} placeholder="Address" />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <div className="d-flex gap-2">
-                                    <Button type="submit" variant="warning" disabled={loading}>
-                                        {loading ? <Spinner size="sm" /> : 'Save Changes'}
-                                    </Button>
-                                    <Button variant="outline-secondary" type="button" onClick={() => setShowPwModal(true)}>
-                                        🔑 Change Password
-                                    </Button>
+            <Container className="py-4" style={{ maxWidth: 860 }}>
+                <Row className="g-4">
+                    {/* ── Left: Avatar card ── */}
+                    <Col md={4}>
+                        <div className="profile-top-card">
+                            <div className="profile-banner-bg"></div>
+                            <div className="p-3 text-center">
+                                <div className="profile-avatar-ring mx-auto">
+                                    <img src={user.avatar} alt={user.fullName} className="profile-avatar-img" />
                                 </div>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+                                <div className="profile-role-chip">
+                                    {user.role === 'admin' ? '⚙️ Admin' : '👤 Member'}
+                                </div>
+                                <h5 className="fw-bold mt-3 mb-0">{user.fullName}</h5>
+                                <p className="text-muted small mb-3">{user.email}</p>
+                                <p className="text-muted" style={{ fontSize: '0.78rem' }}>
+                                    Member since {user.createdAt}
+                                </p>
 
-            {/* Change Password Modal */}
+                                {/* Quick stats */}
+                                <div className="d-flex gap-2 justify-content-center mt-3">
+                                    <div className="profile-stat-item flex-fill">
+                                        <div className="profile-stat-val">0</div>
+                                        <div className="profile-stat-lbl">Borrows</div>
+                                    </div>
+                                    <div className="profile-stat-item flex-fill">
+                                        <div className="profile-stat-val text-warning">★</div>
+                                        <div className="profile-stat-lbl">Member</div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    className="btn btn-outline-secondary w-100 mt-3"
+                                    style={{ borderRadius: 10, fontSize: '0.85rem', fontWeight: 600 }}
+                                    onClick={() => setShowPwModal(true)}
+                                >
+                                    🔑 Change Password
+                                </button>
+                            </div>
+                        </div>
+                    </Col>
+
+                    {/* ── Right: Edit form ── */}
+                    <Col md={8}>
+                        <div className="profile-form-card p-4">
+                            <h5 className="fw-bold mb-1" style={{ fontSize: '1.1rem' }}>Edit Information</h5>
+                            <p className="text-muted small mb-4">Update your personal details below</p>
+
+                            {error && (
+                                <Alert variant="danger" onClose={() => setError('')} dismissible style={{ borderRadius: 10 }}>
+                                    {error}
+                                </Alert>
+                            )}
+
+                            <form onSubmit={handleSave}>
+                                <Row className="g-3">
+                                    <Col md={6}>
+                                        <label className="profile-field-label">Full Name <span style={{ color: '#ef4444' }}>*</span></label>
+                                        <input name="fullName" className="profile-field-input" value={formData.fullName} onChange={handleChange} placeholder="Your full name" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <label className="profile-field-label">Username <span style={{ color: '#ef4444' }}>*</span></label>
+                                        <input name="username" className="profile-field-input" value={formData.username} onChange={handleChange} placeholder="username" />
+                                    </Col>
+                                    <Col xs={12}>
+                                        <label className="profile-field-label">Email</label>
+                                        <input className="profile-field-input" value={user.email} disabled />
+                                    </Col>
+                                    <Col md={6}>
+                                        <label className="profile-field-label">Phone</label>
+                                        <input name="phone" className="profile-field-input" value={formData.phone} onChange={handleChange} placeholder="e.g. +84 123 456 789" />
+                                    </Col>
+                                    <Col md={6}>
+                                        <label className="profile-field-label">Address</label>
+                                        <input name="address" className="profile-field-input" value={formData.address} onChange={handleChange} placeholder="Your address" />
+                                    </Col>
+                                </Row>
+
+                                <div className="mt-4">
+                                    <button type="submit" className="profile-save-btn" disabled={loading}>
+                                        {loading ? <Spinner size="sm" /> : '💾 Save Changes'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+
+            {/* ── Change Password Modal ── */}
             <Modal show={showPwModal} onHide={() => setShowPwModal(false)} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>🔑 Change Password</Modal.Title>
+                <Modal.Header closeButton style={{ border: 'none', paddingBottom: 0 }}>
+                    <Modal.Title style={{ fontWeight: 800, fontSize: '1.15rem' }}>🔑 Change Password</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    {pwError && <Alert variant="danger" onClose={() => setPwError('')} dismissible>{pwError}</Alert>}
-                    <Form onSubmit={handleChangePassword}>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Current Password</Form.Label>
-                            <Form.Control
-                                type="password" value={pwData.current}
-                                onChange={e => setPwData(p => ({ ...p, current: e.target.value }))}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>New Password</Form.Label>
-                            <Form.Control
-                                type="password" value={pwData.next}
-                                onChange={e => setPwData(p => ({ ...p, next: e.target.value }))}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label>Confirm New Password</Form.Label>
-                            <Form.Control
-                                type="password" value={pwData.confirm}
-                                onChange={e => setPwData(p => ({ ...p, confirm: e.target.value }))}
-                            />
-                        </Form.Group>
-                        <Button type="submit" variant="warning" className="w-100" disabled={pwLoading}>
-                            {pwLoading ? <Spinner size="sm" /> : 'Update Password'}
-                        </Button>
-                    </Form>
+                <Modal.Body className="px-4 pb-4">
+                    {pwError && (
+                        <Alert variant="danger" onClose={() => setPwError('')} dismissible style={{ borderRadius: 10, fontSize: '0.88rem' }}>
+                            {pwError}
+                        </Alert>
+                    )}
+                    <form onSubmit={handleChangePassword}>
+                        <div className="mb-3">
+                            <label className="profile-field-label">Current Password</label>
+                            <input type="password" className="pw-modal-input" value={pwData.current} onChange={e => setPwData(p => ({ ...p, current: e.target.value }))} />
+                        </div>
+                        <div className="mb-3">
+                            <label className="profile-field-label">New Password</label>
+                            <input type="password" className="pw-modal-input" value={pwData.next} onChange={e => setPwData(p => ({ ...p, next: e.target.value }))} />
+                        </div>
+                        <div className="mb-4">
+                            <label className="profile-field-label">Confirm New Password</label>
+                            <input type="password" className="pw-modal-input" value={pwData.confirm} onChange={e => setPwData(p => ({ ...p, confirm: e.target.value }))} />
+                        </div>
+                        <button type="submit" className="profile-save-btn w-100" disabled={pwLoading}
+                            style={{ justifyContent: 'center' }}>
+                            {pwLoading ? <Spinner size="sm" /> : '🔒 Update Password'}
+                        </button>
+                    </form>
                 </Modal.Body>
             </Modal>
-        </Container>
+        </div>
     );
 };
 
 export default Profile;
+
+

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Badge, Form, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Badge, Spinner, Alert } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { booksAPI, categoriesAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -46,15 +46,15 @@ const BookDetail = () => {
     }, [id]);
 
     if (loading) return (
-        <Container className="py-5 text-center">
+        <div className="text-center py-5">
             <Spinner animation="border" variant="warning" size="lg" />
-        </Container>
+        </div>
     );
 
     if (error || !book) return (
         <Container className="py-5">
             <Alert variant="danger">{error || 'Book not found.'}</Alert>
-            <Button variant="outline-dark" onClick={() => navigate('/')}>← Back to Home</Button>
+            <button className="btn btn-outline-dark" onClick={() => navigate('/')}>← Back to Home</button>
         </Container>
     );
 
@@ -78,140 +78,198 @@ const BookDetail = () => {
         }
     };
 
+    const stars = Math.round(book.rating);
+
     return (
-        <Container className="py-5">
-            <Button variant="link" className="text-dark ps-0 mb-3 text-decoration-none" onClick={() => navigate(-1)}>
-                ← Back
-            </Button>
+        <div>
+            {/* ── Dark Hero Banner ── */}
+            <div className="book-detail-hero">
+                <Container>
+                    <button
+                        className="btn btn-link text-white text-decoration-none ps-0 mb-4 opacity-75"
+                        onClick={() => navigate(-1)}
+                        style={{ fontSize: '0.9rem' }}
+                    >
+                        ← Back
+                    </button>
+                    <Row className="g-5 pb-5 align-items-end">
+                        {/* Cover */}
+                        <Col md={3} className="text-center">
+                            <img
+                                src={book.cover}
+                                alt={book.title}
+                                className="book-detail-cover-3d"
+                                style={{ width: '100%', maxWidth: 220, display: 'block', margin: '0 auto', borderRadius: 10 }}
+                                onError={e => { e.target.src = `https://placehold.co/300x450/2c3e50/white?text=${encodeURIComponent(book.title.slice(0, 20))}`; }}
+                            />
+                        </Col>
 
-            <Row className="g-5">
-                <Col md={4}>
-                    <div className="book-detail-cover-wrapper">
-                        <img
-                            src={book.cover}
-                            alt={book.title}
-                            className="book-detail-cover"
-                            onError={e => { e.target.src = `https://placehold.co/300x450/2c3e50/white?text=${encodeURIComponent(book.title.slice(0, 20))}`; }}
-                        />
-                    </div>
-                    <div className="d-flex gap-2 mt-3">
-                        <Button
-                            variant="warning"
-                            className="flex-grow-1"
-                            onClick={handleAddToCart}
-                            disabled={book.stock === 0}
-                        >
-                            🛒 Add to Cart
-                        </Button>
-                        <Button
-                            variant={inWishlist ? 'danger' : 'outline-danger'}
-                            onClick={handleWishlist}
-                        >
-                            {inWishlist ? '❤️' : '🤍'}
-                        </Button>
-                    </div>
-                </Col>
+                        {/* Info */}
+                        <Col md={9}>
+                            {/* Badges */}
+                            <div className="d-flex flex-wrap gap-2 mb-3">
+                                {category && (
+                                    <span className="book-hero-badge" style={{ backgroundColor: category.color, color: '#fff' }}>
+                                        {category.icon} {category.name}
+                                    </span>
+                                )}
+                                {book.featured && (
+                                    <span className="book-hero-badge" style={{ background: 'rgba(246,201,14,0.2)', border: '1px solid rgba(246,201,14,0.4)', color: '#f6c90e' }}>
+                                        ⭐ Featured
+                                    </span>
+                                )}
+                                {book.stock > 0
+                                    ? <span className="book-hero-badge" style={{ background: 'rgba(72,187,120,0.2)', border: '1px solid rgba(72,187,120,0.3)', color: '#68d391' }}>✓ In Stock ({book.stock})</span>
+                                    : <span className="book-hero-badge" style={{ background: 'rgba(252,129,74,0.2)', border: '1px solid rgba(252,129,74,0.3)', color: '#fc8149' }}>✗ Out of Stock</span>
+                                }
+                            </div>
 
-                <Col md={8}>
-                    <div className="d-flex flex-wrap gap-2 mb-2 align-items-center">
-                        {category && (
-                            <Badge style={{ backgroundColor: category.color, fontSize: '0.85rem' }}>
-                                {category.icon} {category.name}
-                            </Badge>
-                        )}
-                        {book.featured && <Badge bg="warning" text="dark">⭐ Featured</Badge>}
-                        {book.stock > 0
-                            ? <Badge bg="success">In Stock ({book.stock})</Badge>
-                            : <Badge bg="danger">Out of Stock</Badge>
-                        }
-                    </div>
+                            <h1 className="fw-bold text-white mb-1" style={{ fontSize: 'clamp(1.6rem, 4vw, 2.4rem)' }}>{book.title}</h1>
+                            <p className="mb-3" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.05rem' }}>by {book.author}</p>
 
-                    <h1 className="fw-bold mb-1">{book.title}</h1>
-                    <h5 className="text-muted mb-3">by {book.author}</h5>
+                            {/* Stars */}
+                            <div className="d-flex align-items-center gap-2 mb-4">
+                                {[1, 2, 3, 4, 5].map(s => (
+                                    <span key={s} style={{ fontSize: '1.3rem', color: s <= stars ? '#f6c90e' : 'rgba(255,255,255,0.2)' }}>★</span>
+                                ))}
+                                <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem' }}>({book.rating}/5)</span>
+                            </div>
 
-                    <div className="d-flex align-items-center mb-4">
-                        <span className="text-warning fs-5">
-                            {'★'.repeat(Math.round(book.rating))}{'☆'.repeat(5 - Math.round(book.rating))}
-                        </span>
-                        <span className="ms-2 text-muted">({book.rating}/5)</span>
-                    </div>
+                            {/* Meta pills */}
+                            <Row className="g-2 mb-4">
+                                {[
+                                    { label: 'Publisher', value: book.publisher },
+                                    { label: 'Year', value: book.publishYear },
+                                    { label: 'Pages', value: book.pages },
+                                    { label: 'Language', value: book.language },
+                                    { label: 'ISBN', value: book.isbn },
+                                ].filter(m => m.value).map(({ label, value }) => (
+                                    <Col xs={6} sm={4} md={3} key={label}>
+                                        <div className="meta-pill">
+                                            <div className="meta-pill-label">{label}</div>
+                                            <div className="meta-pill-val">{value}</div>
+                                        </div>
+                                    </Col>
+                                ))}
+                            </Row>
 
-                    <Row className="g-3 mb-4">
-                        {[
-                            { label: 'Publisher', value: book.publisher },
-                            { label: 'Year', value: book.publishYear },
-                            { label: 'Pages', value: book.pages },
-                            { label: 'Language', value: book.language },
-                            { label: 'ISBN', value: book.isbn },
-                        ].map(({ label, value }) => (
-                            <Col xs={6} sm={4} key={label}>
-                                <div className="meta-box p-2 rounded bg-light">
-                                    <div className="text-muted small">{label}</div>
-                                    <div className="fw-semibold small">{value}</div>
-                                </div>
-                            </Col>
-                        ))}
+                            {/* Action buttons */}
+                            <div className="d-flex gap-3 flex-wrap">
+                                <button
+                                    className="cart-checkout-btn"
+                                    style={{ width: 'auto', padding: '0 2rem', background: 'linear-gradient(135deg,#f6c90e,#e0a800)' }}
+                                    onClick={handleAddToCart}
+                                    disabled={book.stock === 0}
+                                >
+                                    🛒 Add to Cart
+                                </button>
+                                <button
+                                    className="btn"
+                                    style={{
+                                        height: 52, borderRadius: 14,
+                                        border: inWishlist ? '2px solid #ef4444' : '2px solid rgba(255,255,255,0.25)',
+                                        background: inWishlist ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.06)',
+                                        color: inWishlist ? '#ef4444' : 'white',
+                                        fontWeight: 700, fontSize: '1.2rem',
+                                        transition: 'all .25s',
+                                        padding: '0 1.2rem'
+                                    }}
+                                    onClick={handleWishlist}
+                                >
+                                    {inWishlist ? '❤️' : '🤍'}
+                                </button>
+                            </div>
+                        </Col>
                     </Row>
+                </Container>
+            </div>
 
-                    <p className="text-secondary lh-lg mb-4">{book.description}</p>
+            {/* ── Body ── */}
+            <Container className="py-5">
+                <Row className="g-5">
+                    {/* Description */}
+                    <Col lg={8}>
+                        <div
+                            style={{ background: 'white', borderRadius: 18, padding: '2rem', boxShadow: '0 4px 24px rgba(0,0,0,0.07)' }}
+                        >
+                            <h4 className="fw-bold mb-3" style={{ fontSize: '1.1rem' }}>📝 Description</h4>
+                            <p className="text-secondary lh-lg mb-0" style={{ fontSize: '0.97rem' }}>{book.description}</p>
+                        </div>
+                    </Col>
 
-                    {/* Rental box */}
-                    <div className="rental-box p-4 rounded border">
-                        <h5 className="mb-3">💰 Rental Options</h5>
-                        <Row className="align-items-end g-3">
-                            <Col xs={12} sm={5}>
-                                <Form.Label className="fw-semibold">Number of Days</Form.Label>
-                                <Form.Control
+                    {/* Rental calculator */}
+                    <Col lg={4}>
+                        <div className="rental-calc-card">
+                            <h5 className="fw-bold mb-4 d-flex align-items-center gap-2">
+                                <span style={{ background: '#fffbeb', borderRadius: 8, width: 36, height: 36, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>💰</span>
+                                Rental Calculator
+                            </h5>
+
+                            <div className="mb-3">
+                                <label className="profile-field-label">Number of Days</label>
+                                <input
                                     type="number"
-                                    min="1"
-                                    max="60"
+                                    className="profile-field-input"
+                                    min="1" max="60"
                                     value={days}
                                     onChange={e => setDays(Math.max(1, parseInt(e.target.value) || 1))}
                                 />
-                                <div className="d-flex gap-2 mt-2">
+                                <div className="d-flex gap-2 mt-2 flex-wrap">
                                     {[3, 7, 14, 30].map(d => (
-                                        <Button key={d} size="sm" variant={days === d ? 'warning' : 'outline-secondary'} onClick={() => setDays(d)}>
+                                        <button
+                                            key={d}
+                                            className={`rental-days-chip${days === d ? ' active' : ''}`}
+                                            onClick={() => setDays(d)}
+                                        >
                                             {d}d
-                                        </Button>
+                                        </button>
                                     ))}
                                 </div>
-                            </Col>
-                            <Col xs={12} sm={7}>
-                                <div className="p-3 bg-light rounded">
-                                    <div className="d-flex justify-content-between mb-1">
-                                        <span className="text-muted">Price per day:</span>
-                                        <span className="fw-semibold">${book.rentalPrice}</span>
-                                    </div>
-                                    <div className="d-flex justify-content-between mb-1">
-                                        <span className="text-muted">Duration:</span>
-                                        <span className="fw-semibold">{days} day{days > 1 ? 's' : ''}</span>
-                                    </div>
-                                    <hr className="my-2" />
-                                    <div className="d-flex justify-content-between">
-                                        <span className="fw-bold">Total:</span>
-                                        <span className="fw-bold text-warning fs-5">${totalPrice}</span>
-                                    </div>
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
-                </Col>
-            </Row>
+                            </div>
 
-            {/* Related Books */}
-            {relatedBooks.length > 0 && (
-                <section className="mt-5">
-                    <h3 className="section-title">📖 Related Books</h3>
-                    <Row className="g-3">
-                        {relatedBooks.map(b => (
-                            <Col key={b.id} xs={6} md={3}>
-                                <BookCard book={b} categories={allCategories} />
-                            </Col>
-                        ))}
-                    </Row>
-                </section>
-            )}
-        </Container>
+                            <div style={{ background: '#fefce8', borderRadius: 12, padding: '1rem', border: '1px solid rgba(246,201,14,0.25)' }}>
+                                <div className="d-flex justify-content-between mb-2" style={{ fontSize: '0.88rem', color: '#6b7280' }}>
+                                    <span>Price per day</span>
+                                    <span className="fw-bold text-dark">${book.rentalPrice}</span>
+                                </div>
+                                <div className="d-flex justify-content-between mb-2" style={{ fontSize: '0.88rem', color: '#6b7280' }}>
+                                    <span>Duration</span>
+                                    <span className="fw-bold text-dark">{days} day{days > 1 ? 's' : ''}</span>
+                                </div>
+                                <hr style={{ borderColor: 'rgba(246,201,14,0.3)' }} />
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <span className="fw-bold">Total Amount</span>
+                                    <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#e0a800' }}>${totalPrice}</span>
+                                </div>
+                            </div>
+
+                            <button
+                                className="cart-checkout-btn mt-3"
+                                onClick={handleAddToCart}
+                                disabled={book.stock === 0}
+                                style={{ width: '100%' }}
+                            >
+                                🛒 Rent for {days} Day{days > 1 ? 's' : ''}
+                            </button>
+                        </div>
+                    </Col>
+                </Row>
+
+                {/* Related Books */}
+                {relatedBooks.length > 0 && (
+                    <section className="mt-5">
+                        <h3 className="section-title">📖 Related Books</h3>
+                        <Row className="g-3">
+                            {relatedBooks.map(b => (
+                                <Col key={b.id} xs={6} md={3}>
+                                    <BookCard book={b} categories={allCategories} />
+                                </Col>
+                            ))}
+                        </Row>
+                    </section>
+                )}
+            </Container>
+        </div>
     );
 };
 
