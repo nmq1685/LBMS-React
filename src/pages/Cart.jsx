@@ -103,8 +103,7 @@ const Cart = () => {
                 {cartItems.length === 0 ? (
                     <div className="cart-empty-wrap">
                         <span className="cart-empty-icon">🛒</span>
-                        <h4 className="fw-bold mt-2 mb-2">Your cart is empty</h4>
-                        <p className="text-muted mb-4">Browse books and add them to your cart to get started</p>
+                        <p className="text-muted mb-4 mt-2">Browse books and add them to your cart to get started</p>
                         <Link to="/" className="btn btn-warning fw-bold px-4 py-2" style={{ borderRadius: 12 }}>
                             Browse Books
                         </Link>
