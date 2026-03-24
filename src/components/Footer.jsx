@@ -33,7 +33,7 @@ const Footer = () => (
                     <h6 className="text-warning mb-3">Contact Us</h6>
                     <p className="text-secondary mb-1">📧 info@libraryms.com</p>
                     <p className="text-secondary mb-1">📞 +84 123 456 789</p>
-                    <p className="text-secondary">📍 Ho Chi Minh City, Vietnam</p>
+                    <p className="text-secondary">📍 Can Tho, Vietnam</p>
                 </Col>
             </Row>
             <hr className="border-secondary" />

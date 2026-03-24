@@ -17,9 +17,9 @@
       "username": "john_doe",
       "email": "john@example.com",
       "password": "john123",
-      "role": "user",
-      "fullName": "John Doe",
-      "phone": "0987654321",
+      "role": "admin",
+      "fullName": "John Doeaaa",
+      "phone": "0842638504555",
       "address": "456 Reader Lane, Ho Chi Minh City",
       "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=john",
       "createdAt": "2024-01-10"
@@ -47,6 +47,18 @@
       "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=123",
       "createdAt": "2026-03-23",
       "id": "fF_8p-UhoAI"
+    },
+    {
+      "id": "7d32",
+      "fullName": "Nguyen Minh Quan 2",
+      "username": "NMQ",
+      "email": "quannm1685@gmail.com",
+      "password": "123457",
+      "phone": "0123456789",
+      "address": "456 Reader Lane, Ho Chi Minh City",
+      "role": "user",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=NMQ",
+      "createdAt": "2026-03-24"
     }
   ],
   "categories": [
@@ -119,6 +131,13 @@
       "description": "Exploring fundamental questions of existence and knowledge",
       "icon": "🤔",
       "color": "#4cc9f0"
+    },
+    {
+      "id": "98f8",
+      "name": "Nguyễn Văn A",
+      "description": "ădawdawd",
+      "icon": "🏛️",
+      "color": "#f4a261"
     }
   ],
   "books": [
@@ -130,7 +149,7 @@
       "cover": "https://covers.openlibrary.org/b/isbn/9780439708180-L.jpg",
       "description": "The first book in the beloved Harry Potter series. Young Harry Potter discovers he's a wizard on his 11th birthday and begins his magical education at Hogwarts School of Witchcraft and Wizardry.",
       "rentalPrice": 2.99,
-      "stock": 7,
+      "stock": 4,
       "rating": 4.9,
       "pages": 309,
       "publisher": "Bloomsbury Publishing",
@@ -164,7 +183,7 @@
       "cover": "https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg",
       "description": "Bilbo Baggins is a hobbit who enjoys a comfortable, unambitious life but finds himself swept into an epic quest to reclaim the dwarf homeland Erebor from the fearsome dragon Smaug.",
       "rentalPrice": 2.5,
-      "stock": 10,
+      "stock": 9,
       "rating": 4.8,
       "pages": 310,
       "publisher": "Houghton Mifflin Harcourt",
@@ -546,6 +565,23 @@
       "language": "English",
       "isbn": "9780201633610",
       "featured": false
+    },
+    {
+      "id": "5510",
+      "title": "haha",
+      "author": "hi",
+      "categoryId": 1,
+      "cover": "https://covers.openlibrary.org/b/id/12506861-L.jpg",
+      "description": "ăfafaw",
+      "rentalPrice": 24,
+      "stock": 20,
+      "rating": 4,
+      "pages": 150,
+      "publisher": "khaw",
+      "publishYear": 2005,
+      "language": "English",
+      "isbn": "123",
+      "featured": false
     }
   ],
   "cart": [
@@ -588,6 +624,11 @@
     {
       "id": "8b81",
       "userId": "2",
+      "bookId": "3"
+    },
+    {
+      "id": "5b92",
+      "userId": "7d32",
       "bookId": "3"
     }
   ],
@@ -657,6 +698,42 @@
       "days": 7,
       "totalPrice": 20.93,
       "id": "Ic2t48vlmqE"
+    },
+    {
+      "id": "e4a0",
+      "userId": "7d32",
+      "bookId": "1",
+      "borrowDate": "2026-03-24",
+      "dueDate": "2026-03-26",
+      "returnDate": null,
+      "status": "borrowed",
+      "days": 2,
+      "quantity": 2,
+      "totalPrice": 11.96
+    },
+    {
+      "id": "6408",
+      "userId": "7d32",
+      "bookId": "1",
+      "borrowDate": "2026-03-24",
+      "dueDate": "2026-03-31",
+      "returnDate": null,
+      "status": "borrowed",
+      "days": 7,
+      "quantity": 1,
+      "totalPrice": 20.93
+    },
+    {
+      "id": "a42d",
+      "userId": "7d32",
+      "bookId": "3",
+      "borrowDate": "2026-03-24",
+      "dueDate": "2026-03-31",
+      "returnDate": null,
+      "status": "borrowed",
+      "days": 7,
+      "quantity": 1,
+      "totalPrice": 17.5
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
