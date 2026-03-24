@@ -35,6 +35,18 @@
       "address": "789 Book Avenue, Hanoi",
       "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jane",
       "createdAt": "2024-01-15"
+    },
+    {
+      "fullName": "cao hoang kahng",
+      "username": "123",
+      "email": "khanglunkg5@gmail.com",
+      "password": "123456",
+      "phone": "0842638504",
+      "address": "kêh",
+      "role": "user",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=123",
+      "createdAt": "2026-03-23",
+      "id": "fF_8p-UhoAI"
     }
   ],
   "categories": [
@@ -118,7 +130,7 @@
       "cover": "https://covers.openlibrary.org/b/isbn/9780439708180-L.jpg",
       "description": "The first book in the beloved Harry Potter series. Young Harry Potter discovers he's a wizard on his 11th birthday and begins his magical education at Hogwarts School of Witchcraft and Wizardry.",
       "rentalPrice": 2.99,
-      "stock": 8,
+      "stock": 7,
       "rating": 4.9,
       "pages": 309,
       "publisher": "Bloomsbury Publishing",
@@ -623,6 +635,28 @@
       "status": "overdue",
       "days": 10,
       "totalPrice": 27.5
+    },
+    {
+      "userId": "fF_8p-UhoAI",
+      "bookId": "7",
+      "borrowDate": "2026-03-23",
+      "dueDate": "2026-03-30",
+      "returnDate": "2026-03-23",
+      "status": "returned",
+      "days": 7,
+      "totalPrice": 12.25,
+      "id": "BLy2ih0WglM"
+    },
+    {
+      "userId": "fF_8p-UhoAI",
+      "bookId": "1",
+      "borrowDate": "2026-03-23",
+      "dueDate": "2026-03-30",
+      "returnDate": null,
+      "status": "borrowed",
+      "days": 7,
+      "totalPrice": 20.93,
+      "id": "Ic2t48vlmqE"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
