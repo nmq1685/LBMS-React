@@ -10,10 +10,13 @@ const Cart = () => {
   const { user } = useAuth();
   const { cartItems, removeFromCart, updateCartItem, clearCart } = useCart();
   const navigate = useNavigate();
+
+  // ── State ──
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
 
+  // ── Fetch books khi component mount ──
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -29,8 +32,10 @@ const Cart = () => {
     fetch();
   }, []);
 
+  // ── Lấy thông tin sách từ cartItem ──
   const getBook = (bookId) => books.find((b) => b.id === bookId);
 
+  // ── Tính tổng từng item ──
   const getItemTotal = (item) => {
     const book = getBook(item.bookId);
     return book
@@ -38,20 +43,27 @@ const Cart = () => {
       : "0.00";
   };
 
+  // ── Tính tổng tất cả item ──
   const grandTotal = cartItems.reduce((sum, item) => {
     const book = getBook(item.bookId);
     return sum + (book ? book.rentalPrice * item.days * item.quantity : 0);
   }, 0);
 
+  // ── Checkout ──
   const handleCheckout = async () => {
     if (cartItems.length === 0) return;
+
     setCheckingOut(true);
+
     try {
       const today = new Date();
+
+      // Chuẩn bị data borrow
       const borrows = cartItems.map((item) => {
         const book = getBook(item.bookId);
         const dueDate = new Date(today);
         dueDate.setDate(dueDate.getDate() + item.days);
+
         return {
           userId: user.id,
           bookId: item.bookId,
@@ -60,13 +72,14 @@ const Cart = () => {
           returnDate: null,
           status: "borrowed",
           days: item.days,
-          quantity: item.quantity, // thêm quantity
+          quantity: item.quantity,
           totalPrice: parseFloat(
             (book.rentalPrice * item.days * item.quantity).toFixed(2),
           ),
         };
       });
 
+      // Gửi borrows lên API
       await Promise.all(borrows.map((b) => borrowsAPI.create(b)));
 
       // Update stock
@@ -117,7 +130,7 @@ const Cart = () => {
 
       <Container className="py-4">
         {cartItems.length === 0 ? (
-          <div className="cart-empty-wrap">
+          <div className="cart-empty-wrap text-center">
             <span className="cart-empty-icon">🛒</span>
             <p className="text-muted mb-4 mt-2">
               Browse books and add them to your cart to get started
@@ -132,12 +145,13 @@ const Cart = () => {
           </div>
         ) : (
           <Row className="g-4">
-            {/* ── Items ── */}
+            {/* ── Cart Items ── */}
             <Col lg={8}>
               <div className="d-flex flex-column gap-3">
                 {cartItems.map((item, idx) => {
                   const book = getBook(item.bookId);
                   if (!book) return null;
+
                   return (
                     <div
                       key={item.id}
@@ -186,6 +200,7 @@ const Cart = () => {
                                 </span>
                               </span>
                             </div>
+
                             <button
                               className="btn btn-link text-danger p-0"
                               style={{ fontSize: "1.1rem", lineHeight: 1 }}
@@ -236,6 +251,7 @@ const Cart = () => {
                                 </button>
                               </div>
                             </div>
+
                             {/* Quantity */}
                             <div>
                               <div
@@ -252,12 +268,12 @@ const Cart = () => {
                               <div className="d-flex align-items-center gap-1">
                                 <button
                                   className="qty-btn"
-                                  onClick={() => {
-                                    if (item.quantity > 1)
-                                      updateCartItem(item.id, {
-                                        quantity: item.quantity - 1,
-                                      });
-                                  }}
+                                  onClick={() =>
+                                    item.quantity > 1 &&
+                                    updateCartItem(item.id, {
+                                      quantity: item.quantity - 1,
+                                    })
+                                  }
                                 >
                                   −
                                 </button>
@@ -276,7 +292,8 @@ const Cart = () => {
                                 </button>
                               </div>
                             </div>
-                            {/* Item total */}
+
+                            {/* Subtotal */}
                             <div className="ms-auto text-end">
                               <div
                                 className="text-muted mb-1"
@@ -349,6 +366,7 @@ const Cart = () => {
                 >
                   {checkingOut ? <Spinner size="sm" /> : "✅ Checkout & Borrow"}
                 </button>
+
                 <button
                   className="cart-clear-btn"
                   onClick={async () => {
